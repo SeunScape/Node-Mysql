@@ -1,4 +1,5 @@
 Node.js REST API with MySQL
+
 This repository contains a simple Node.js application that implements a REST API with MySQL database integration.
 
 Usage
