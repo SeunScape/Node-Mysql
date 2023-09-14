@@ -1,15 +1,28 @@
 require('dotenv').config();
 const express = require('express');
+const { validationResult, check } = require('express-validator');
 
-// const bodyParser = require('body-parser');
 const app = express ();
 const db = require('./dbConnection');
 
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
+
 app.use(express.json());
 
-app.post("/api", (req, res) => {
+const validateName = check('name')
+  .isString()
+  .withMessage('Name should be a string');
+
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+app.post(
+    "/api", 
+    [validateName, handleValidationErrors],
+    (req, res) => {
     const { name } = req.body;
     
     const insertQuery = "INSERT INTO persons (name) VALUES (?)";
